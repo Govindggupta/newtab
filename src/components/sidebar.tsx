@@ -13,6 +13,15 @@ interface SidebarProps {
 export default function Sidebar({ isOpen, onClose, onBackgroundChange, currentBackground }: SidebarProps) {
   const [isDarkMode, setIsDarkMode] = useState(false);
 
+  // Background image options
+  const backgroundOptions = [
+    '/wp6819375.jpg',
+    '/8904441.jpg',
+    '/5992037.jpg',
+    '/1727068108.jpg',
+    '/2962268.jpg'
+  ];
+
   // Load theme preference from localStorage
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme');
@@ -54,6 +63,10 @@ export default function Sidebar({ isOpen, onClose, onBackgroundChange, currentBa
     setIsDarkMode(!isDarkMode);
   };
 
+  const handleImageClick = (imagePath: string) => {
+    onBackgroundChange(imagePath);
+  };
+
   return (
     <>
       {/* Sidebar */}
@@ -89,18 +102,69 @@ export default function Sidebar({ isOpen, onClose, onBackgroundChange, currentBa
         
         {/* Theme Toggle */}
         <div className="mb-6">
-          <button
-            onClick={toggleTheme}
-            className={`
-              w-full py-3 px-4 rounded-lg font-semibold transition-all duration-200 hover:scale-105
-              ${isDarkMode 
-                ? 'bg-gray-600 text-white hover:bg-gray-700' 
-                : 'bg-green-500 text-white hover:bg-green-600'
-              }
-            `}
-          >
-            {isDarkMode ? '🌙 Dark Mode' : '☀️ Light Mode'}
-          </button>
+          <div className="flex items-center justify-between">
+            <span className={`text-sm font-medium ${isDarkMode ? 'text-gray-200' : 'text-gray-600'}`}>
+              {isDarkMode ? '🌙 Dark Mode' : '☀️ Light Mode'}
+            </span>
+            <button
+              onClick={toggleTheme}
+              className={`
+                relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2
+                ${isDarkMode 
+                  ? 'bg-blue-600 focus:ring-blue-500' 
+                  : 'bg-gray-200 focus:ring-gray-500'
+                }
+              `}
+            >
+              <span
+                className={`
+                  inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-200
+                  ${isDarkMode ? 'translate-x-6' : 'translate-x-1'}
+                `}
+              />
+            </button>
+          </div>
+        </div>
+
+        {/* Background Image Options */}
+        <div className="mb-6">
+          <label className={`block mb-3 font-semibold ${isDarkMode ? 'text-gray-200' : 'text-gray-600'}`}>
+            Choose Background
+          </label>
+          <div className="grid grid-cols-2 gap-3">
+            {backgroundOptions.map((imagePath, index) => (
+              <div
+                key={index}
+                onClick={() => handleImageClick(imagePath)}
+                className={`
+                  relative w-full h-20 rounded-lg cursor-pointer transition-all duration-200 hover:scale-105 overflow-hidden border-2
+                  ${currentBackground === imagePath 
+                    ? 'border-blue-500 shadow-lg' 
+                    : isDarkMode 
+                      ? 'border-white/20 hover:border-white/40' 
+                      : 'border-gray-200 hover:border-gray-400'
+                  }
+                `}
+                style={{
+                  backgroundImage: `url(${imagePath})`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center'
+                }}
+              >
+                {/* Overlay for better visibility */}
+                <div className="absolute inset-0 bg-black/20 hover:bg-black/10 transition-colors duration-200" />
+                
+                {/* Check mark for selected image */}
+                {currentBackground === imagePath && (
+                  <div className="absolute top-1 right-1 w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center">
+                    <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Background Upload */}

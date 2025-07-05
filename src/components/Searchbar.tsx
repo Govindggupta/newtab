@@ -71,12 +71,12 @@ export default function Searchbar() {
             relative flex items-center w-full rounded-full border-2 transition-all duration-300 ease-in-out
             ${isDarkMode 
               ? 'bg-white/10 border-white/20 backdrop-blur-md shadow-lg shadow-black/20' 
-              : 'bg-white/80 border-gray-200 backdrop-blur-md shadow-lg shadow-gray-200/50'
+              : 'bg-white/30 border-gray-200 backdrop-blur-md shadow-lg shadow-black/20'
             }
             ${isFocused 
               ? isDarkMode 
                 ? 'border-white/40 shadow-xl shadow-black/30' 
-                : 'border-blue-400 shadow-xl shadow-blue-200/50'
+                : 'border-blue-400 shadow-xl shadow-black/30'
               : ''
             }
           `}
@@ -111,7 +111,7 @@ export default function Searchbar() {
               absolute top-full left-0 right-0 mt-2 rounded-lg border transition-all duration-200
               ${isDarkMode 
                 ? 'bg-white/10 border-white/20 backdrop-blur-md shadow-lg' 
-                : 'bg-white/90 border-gray-200 backdrop-blur-md shadow-lg'
+                : 'bg-white/30 border-gray-200 backdrop-blur-md shadow-lg'
               }
             `}
           >
