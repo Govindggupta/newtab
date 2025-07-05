@@ -50,123 +50,71 @@ export default function Sidebar({ isOpen, onClose, onBackgroundChange, currentBa
     setIsDarkMode(!isDarkMode);
   };
 
-  const sidebarStyles = {
-    position: 'fixed' as const,
-    top: 0,
-    left: isOpen ? 0 : '-300px',
-    width: '300px',
-    height: '100vh',
-    background: isDarkMode ? 'rgba(30, 30, 30, 0.95)' : 'rgba(255, 255, 255, 0.95)',
-    backdropFilter: 'blur(10px)',
-    zIndex: 999,
-    transition: 'left 0.3s ease',
-    padding: '80px 20px 20px 20px',
-    boxShadow: '2px 0 10px rgba(0, 0, 0, 0.1)',
-    color: isDarkMode ? '#ffffff' : '#333333'
-  };
-
-  const titleStyles = {
-    marginBottom: '20px',
-    color: isDarkMode ? '#ffffff' : '#333333',
-    fontSize: '18px',
-    fontWeight: 'bold'
-  };
-
-  const labelStyles = {
-    display: 'block',
-    marginBottom: '10px',
-    fontWeight: 'bold',
-    color: isDarkMode ? '#cccccc' : '#555555'
-  };
-
-  const inputStyles = {
-    width: '100%',
-    padding: '10px',
-    border: `2px dashed ${isDarkMode ? '#555' : '#ccc'}`,
-    borderRadius: '8px',
-    background: isDarkMode ? '#2a2a2a' : '#f9f9f9',
-    cursor: 'pointer',
-    color: isDarkMode ? '#ffffff' : '#333333'
-  };
-
-  const buttonStyles = {
-    width: '100%',
-    padding: '12px',
-    background: '#007bff',
-    color: 'white',
-    border: 'none',
-    borderRadius: '8px',
-    cursor: 'pointer',
-    fontSize: '14px',
-    fontWeight: 'bold',
-    transition: 'background 0.3s ease',
-    marginBottom: '10px'
-  };
-
-  const themeButtonStyles = {
-    ...buttonStyles,
-    background: isDarkMode ? '#6c757d' : '#28a745'
-  };
-
-  const noteStyles = {
-    fontSize: '12px',
-    color: isDarkMode ? '#aaaaaa' : '#666666',
-    lineHeight: '1.4'
-  };
-
   return (
     <>
       {/* Sidebar */}
-      <div style={sidebarStyles}>
-        <h2 style={titleStyles}>Background Settings</h2>
+      <div
+        className={`
+          fixed top-0 left-0 w-80 h-screen backdrop-blur-md z-50 transition-all duration-300 ease-in-out
+          ${isOpen ? 'translate-x-0' : '-translate-x-full'}
+          ${isDarkMode 
+            ? 'bg-black/80 text-white shadow-2xl shadow-black/50' 
+            : 'bg-white/90 text-gray-800 shadow-2xl shadow-gray-200/50'
+          }
+        `}
+        style={{ padding: '80px 20px 20px 20px' }}
+      >
+        <h2 className={`text-xl font-bold mb-6 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+          Background Settings
+        </h2>
         
         {/* Theme Toggle */}
-        <div style={{ marginBottom: '20px' }}>
+        <div className="mb-6">
           <button
             onClick={toggleTheme}
-            style={themeButtonStyles}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = isDarkMode ? '#5a6268' : '#218838';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = isDarkMode ? '#6c757d' : '#28a745';
-            }}
+            className={`
+              w-full py-3 px-4 rounded-lg font-semibold transition-all duration-200 hover:scale-105
+              ${isDarkMode 
+                ? 'bg-gray-600 text-white hover:bg-gray-700' 
+                : 'bg-green-500 text-white hover:bg-green-600'
+              }
+            `}
           >
             {isDarkMode ? '🌙 Dark Mode' : '☀️ Light Mode'}
           </button>
         </div>
 
         {/* Background Upload */}
-        <div style={{ marginBottom: '20px' }}>
-          <label style={labelStyles}>
+        <div className="mb-6">
+          <label className={`block mb-3 font-semibold ${isDarkMode ? 'text-gray-200' : 'text-gray-600'}`}>
             Upload New Background
           </label>
           <input
             type="file"
             accept="image/*"
             onChange={handleFileUpload}
-            style={inputStyles}
+            className={`
+              w-full p-3 border-2 border-dashed rounded-lg cursor-pointer transition-all duration-200
+              ${isDarkMode 
+                ? 'border-gray-500 bg-gray-800/50 text-white hover:border-gray-400' 
+                : 'border-gray-300 bg-gray-50 text-gray-800 hover:border-gray-400'
+              }
+            `}
           />
         </div>
 
         {/* Reset Button */}
-        <div style={{ marginBottom: '20px' }}>
+        <div className="mb-6">
           <button
             onClick={resetToDefault}
-            style={buttonStyles}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = '#0056b3';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = '#007bff';
-            }}
+            className="w-full py-3 px-4 bg-blue-500 text-white rounded-lg font-semibold transition-all duration-200 hover:bg-blue-600 hover:scale-105"
           >
             Reset to Default Background
           </button>
         </div>
 
         {/* Note */}
-        <div style={noteStyles}>
+        <div className={`text-xs leading-relaxed ${isDarkMode ? 'text-gray-300' : 'text-gray-500'}`}>
           <p><strong>Note:</strong> Your background preference will be saved locally on this device.</p>
         </div>
       </div>
@@ -175,15 +123,7 @@ export default function Sidebar({ isOpen, onClose, onBackgroundChange, currentBa
       {isOpen && (
         <div
           onClick={onClose}
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            width: '100vw',
-            height: '100vh',
-            zIndex: 998,
-            background: 'rgba(0, 0, 0, 0.3)'
-          }}
+          className="fixed inset-0 bg-black/30 z-40"
         />
       )}
     </>
