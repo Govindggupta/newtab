@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Search, Mic, Camera } from 'lucide-react';
+import { Search } from 'lucide-react';
 
 export default function Searchbar() {
   const [query, setQuery] = useState('');
@@ -20,16 +20,40 @@ export default function Searchbar() {
     }
   }, []);
 
-  // Listen for theme changes
+  // Listen for theme changes from sidebar
   useEffect(() => {
     const handleThemeChange = () => {
       const savedTheme = localStorage.getItem('theme');
       setIsDarkMode(savedTheme === 'dark');
     };
 
+    // Listen for storage events (when theme changes in another component)
     window.addEventListener('storage', handleThemeChange);
-    return () => window.removeEventListener('storage', handleThemeChange);
-  }, []);
+    
+    // Also listen for custom theme change events
+    const handleCustomThemeChange = () => {
+      const savedTheme = localStorage.getItem('theme');
+      setIsDarkMode(savedTheme === 'dark');
+    };
+
+    window.addEventListener('themeChanged', handleCustomThemeChange);
+    
+    // Poll for theme changes (fallback)
+    const interval = setInterval(() => {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'dark' && !isDarkMode) {
+        setIsDarkMode(true);
+      } else if (savedTheme === 'light' && isDarkMode) {
+        setIsDarkMode(false);
+      }
+    }, 100);
+
+    return () => {
+      window.removeEventListener('storage', handleThemeChange);
+      window.removeEventListener('themeChanged', handleCustomThemeChange);
+      clearInterval(interval);
+    };
+  }, [isDarkMode]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,16 +61,6 @@ export default function Searchbar() {
       // Perform search - you can customize this
       window.open(`https://www.google.com/search?q=${encodeURIComponent(query)}`, '_blank');
     }
-  };
-
-  const handleVoiceSearch = () => {
-    // Voice search functionality - you can implement speech recognition here
-    console.log('Voice search clicked');
-  };
-
-  const handleImageSearch = () => {
-    // Image search functionality
-    console.log('Image search clicked');
   };
 
   return (
@@ -68,7 +82,7 @@ export default function Searchbar() {
           `}
         >
           {/* Search Icon */}
-          <div className="absolute left-4 text-gray-400">
+          <div className={`absolute left-4 ${isDarkMode ? 'text-white/60' : 'text-gray-400'}`}>
             <Search size={20} />
           </div>
 
@@ -81,42 +95,13 @@ export default function Searchbar() {
             onBlur={() => setIsFocused(false)}
             placeholder="Search Google or type a URL"
             className={`
-              w-full pl-12 pr-20 py-4 text-lg bg-transparent outline-none placeholder-gray-400
-              ${isDarkMode ? 'text-white' : 'text-gray-800'}
+              w-full pl-12 pr-4 py-4 text-lg bg-transparent outline-none transition-colors duration-200
+              ${isDarkMode 
+                ? 'text-white placeholder-white/50' 
+                : 'text-gray-800 placeholder-gray-500'
+              }
             `}
           />
-
-          {/* Voice Search Button */}
-          <button
-            type="button"
-            onClick={handleVoiceSearch}
-            className={`
-              absolute right-16 p-2 rounded-full transition-all duration-200 hover:scale-110
-              ${isDarkMode 
-                ? 'text-white/70 hover:text-white hover:bg-white/10' 
-                : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'
-              }
-            `}
-            title="Search by voice"
-          >
-            <Mic size={20} />
-          </button>
-
-          {/* Image Search Button */}
-          <button
-            type="button"
-            onClick={handleImageSearch}
-            className={`
-              absolute right-4 p-2 rounded-full transition-all duration-200 hover:scale-110
-              ${isDarkMode 
-                ? 'text-white/70 hover:text-white hover:bg-white/10' 
-                : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'
-              }
-            `}
-            title="Search by image"
-          >
-            <Camera size={20} />
-          </button>
         </div>
 
         {/* Search Suggestions (optional) */}
@@ -132,7 +117,7 @@ export default function Searchbar() {
           >
             <div 
               className={`
-                p-3 text-sm cursor-pointer hover:bg-opacity-20 transition-colors
+                p-3 text-sm cursor-pointer transition-colors duration-200
                 ${isDarkMode 
                   ? 'text-white/80 hover:bg-white/10' 
                   : 'text-gray-700 hover:bg-gray-100'
@@ -144,32 +129,6 @@ export default function Searchbar() {
           </div>
         )}
       </form>
-
-      {/* Quick Actions */}
-      <div className="flex justify-center mt-6 space-x-4">
-        <button
-          className={`
-            px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 hover:scale-105
-            ${isDarkMode 
-              ? 'bg-white/10 text-white/80 hover:bg-white/20 hover:text-white' 
-              : 'bg-white/60 text-gray-700 hover:bg-white/80'
-            }
-          `}
-        >
-          I'm Feeling Lucky
-        </button>
-        <button
-          className={`
-            px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 hover:scale-105
-            ${isDarkMode 
-              ? 'bg-white/10 text-white/80 hover:bg-white/20 hover:text-white' 
-              : 'bg-white/60 text-gray-700 hover:bg-white/80'
-            }
-          `}
-        >
-          Google Search
-        </button>
-      </div>
     </div>
   );
 }

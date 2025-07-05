@@ -22,24 +22,6 @@ export default function Page() {
     localStorage.setItem('backgroundImage', newBackground);
   };
 
-  // Handle file upload
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const result = e.target?.result as string;
-        handleBackgroundChange(result);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  // Reset to default background
-  const resetToDefault = () => {
-    handleBackgroundChange('/wp6819375.jpg');
-  };
-
   return (
     <div 
       className="min-h-screen w-full m-0 p-0 relative bg-cover bg-center bg-no-repeat bg-fixed"

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { X } from 'lucide-react';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -28,6 +29,9 @@ export default function Sidebar({ isOpen, onClose, onBackgroundChange, currentBa
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', isDarkMode ? 'dark' : 'light');
     localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+    
+    // Dispatch custom event to notify other components
+    window.dispatchEvent(new CustomEvent('themeChanged'));
   }, [isDarkMode]);
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -64,6 +68,21 @@ export default function Sidebar({ isOpen, onClose, onBackgroundChange, currentBa
         `}
         style={{ padding: '80px 20px 20px 20px' }}
       >
+        {/* Close Button */}
+        <button
+          onClick={onClose}
+          className={`
+            absolute top-4 right-4 p-2 rounded-full transition-all duration-200 hover:scale-110
+            ${isDarkMode 
+              ? 'text-white/70 hover:text-white hover:bg-white/10' 
+              : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'
+            }
+          `}
+          title="Close sidebar"
+        >
+          <X size={20} />
+        </button>
+
         <h2 className={`text-xl font-bold mb-6 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
           Background Settings
         </h2>
