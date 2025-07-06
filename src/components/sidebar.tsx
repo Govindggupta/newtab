@@ -152,7 +152,7 @@ export default function Sidebar({ isOpen, onClose, onBackgroundChange, currentBa
                 }}
               >
                 {/* Overlay for better visibility */}
-                <div className="absolute inset-0 bg-black/20 hover:bg-black/10 transition-colors duration-200" />
+                <div className=" inset-0 bg-black/20 hover:bg-black/10 transition-colors duration-200" />
                 
                 {/* Check mark for selected image */}
                 {currentBackground === imagePath && (
