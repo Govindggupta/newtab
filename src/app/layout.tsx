@@ -14,6 +14,9 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "NewTab",
+  icons: {
+    icon: "/newtabwhite.svg",
+  },
   description: "A beautiful and customizable new tab page",
 };
 
